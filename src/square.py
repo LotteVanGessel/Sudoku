@@ -1,11 +1,18 @@
 class Square:
     
-    def __init__(self, row, col, piece=None) -> None:
+    def __init__(self, row, col) -> None:
         self.row = row
         self.col = col 
         self.number = None
         self.static = False
         self.possible_numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        self.wrong = False
+
+    def change_number(self, number):
+        if number not in self.possible_numbers:
+            print("here")
+            self.wrong = True
+        self.number = number
 
     def __eq__(self, value: object) -> bool:
         return self.row == value.row and self.col == value.col 
