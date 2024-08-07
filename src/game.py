@@ -47,7 +47,7 @@ class Game:
             surface.blit(lbl, lbl_pos)
             if square.wrong:
                 color = (244, 67, 54)
-                rect = (self.hovered_sqr.col * SQUARESIZE, self.hovered_sqr.row * SQUARESIZE, SQUARESIZE, SQUARESIZE)
+                rect = (row * SQUARESIZE, col * SQUARESIZE, SQUARESIZE, SQUARESIZE)
                 pygame.draw.rect(surface, color, rect, width=3)
 
     def show_hover(self, surface):

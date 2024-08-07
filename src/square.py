@@ -9,10 +9,10 @@ class Square:
         self.wrong = False
 
     def change_number(self, number):
-        if number not in self.possible_numbers:
-            print("here")
-            self.wrong = True
-        self.number = number
+        if self.number != number:
+            if number not in self.possible_numbers:
+                self.wrong = True
+            self.number = number
 
     def __eq__(self, value: object) -> bool:
         return self.row == value.row and self.col == value.col 
