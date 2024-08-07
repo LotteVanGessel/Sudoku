@@ -20,14 +20,15 @@ class Game:
                 rect = (col * SQUARESIZE, row *SQUARESIZE, SQUARESIZE, SQUARESIZE)
                 pygame.draw.rect(surface, color_inside, rect)
                 pygame.draw.rect(surface, color_outside, rect, width = 1)
+        pygame.draw.line(surface,  "#000000", (0, 0 * SQUARESIZE), (HEIGHT, 0 * SQUARESIZE), width = 4)
         pygame.draw.line(surface,  "#000000", (0, 3 * SQUARESIZE), (HEIGHT, 3 * SQUARESIZE), width = 4)
         pygame.draw.line(surface,  "#000000", (0, 6 * SQUARESIZE), (HEIGHT, 6 * SQUARESIZE), width = 4)
-        pygame.draw.line(surface,  "#000000", (0, 0 * SQUARESIZE), (HEIGHT, 0 * SQUARESIZE), width = 4)
         pygame.draw.line(surface,  "#000000", (0, 9 * SQUARESIZE), (HEIGHT, 9 * SQUARESIZE), width = 4)
+        pygame.draw.line(surface,  "#000000", (0 * SQUARESIZE, 0 ), (0 * SQUARESIZE, WIDTH ), width = 4)
         pygame.draw.line(surface,  "#000000", (3 * SQUARESIZE, 0 ), (3 * SQUARESIZE, WIDTH ), width = 4)
         pygame.draw.line(surface,  "#000000", (6 * SQUARESIZE, 0 ), (6 * SQUARESIZE, WIDTH ), width = 4)
         pygame.draw.line(surface,  "#000000", (9 * SQUARESIZE, 0 ), (9* SQUARESIZE, WIDTH ), width = 4)
-        pygame.draw.line(surface,  "#000000", (0 * SQUARESIZE, 0 ), (0 * SQUARESIZE, WIDTH ), width = 4)
+        
 
     
     def show_numbers(self, surface):
@@ -44,6 +45,10 @@ class Game:
             lbl = self.font.render(str(square.number), 1 , color_font)
             lbl_pos = (row* SQUARESIZE + SQUARESIZE / 4, col * SQUARESIZE + SQUARESIZE / 4)
             surface.blit(lbl, lbl_pos)
+            if square.wrong:
+                color = (244, 67, 54)
+                rect = (self.hovered_sqr.col * SQUARESIZE, self.hovered_sqr.row * SQUARESIZE, SQUARESIZE, SQUARESIZE)
+                pygame.draw.rect(surface, color, rect, width=3)
 
     def show_hover(self, surface):
         if self.hovered_sqr:

@@ -27,13 +27,18 @@ class Main:
                     self.motion_row = event.pos[1] // SQUARESIZE
                     self.motion_col = event.pos[0] // SQUARESIZE
                     self.game.set_hover(self.motion_row, self.motion_col)
-
             pressed_keys = pygame.key.get_pressed()
             for key in self.keys:
                 if Square.in_range(self.motion_col, self.motion_row):
                     square = self.game.board.squares[self.motion_col][self.motion_row]
                     if pressed_keys[key] and not square.static:
-                        square.number = self.keys[key]
+                        block = self.game.board.blocks[self.motion_col // 3][self.motion_row //3]
+                        col = self.game.board.columns[self.motion_col]
+                        row = self.game.board.rows[self.motion_col]
+                        square.change_number(self.keys[key])
+                        block.remove_possible_number(self.keys[key])
+                        col.remove_possible_number(self.keys[key])
+                        row.remove_possible_number(self.keys[key])
             pygame.display.update()
 
 main = Main() 
