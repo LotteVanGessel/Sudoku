@@ -5,11 +5,12 @@ class Container:
     def add_square(self, square):
         self.contained_squares.append(square)
 
-    def remove_possible_number(self, number):
+    def remove_possible_number(self):
+        all_in_number = [square.number for square in self.contained_squares]
+        possible_numbers = [i for i in range(1, 10) if i not in all_in_number]
         for square in self.contained_squares:
-            if number in square.possible_numbers:
-                square.possible_numbers.remove(number)
-
+            square.possible_numbers = possible_numbers
+             
 class Row(Container):
     def __init__(self) -> None:
         super().__init__()
