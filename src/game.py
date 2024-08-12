@@ -9,7 +9,10 @@ class Game:
     def __init__(self) -> None:
         self.board = Board()
         self.hovered_sqr = None
-        self.font = pygame.font.SysFont('monospace', 24, bold = True)
+        self.big_font = pygame.font.SysFont('monospace', 24, bold = True)
+        self.small_font = pygame.font.SysFont('monospace', 12, bold = True)
+        self.possible_num_placement = {1:(0, 0), 2:(1,0), 3:(2,0), 4:(0,1), 5:(1,1), 6:(2,1), 7:(0,2), 8:(1,2),9:(2,2)}
+        
 
     def show_bg(self, surface)->None:
         color_inside = "#ffffff"
@@ -36,10 +39,10 @@ class Game:
 
     def show_number(self, surface, square)->None:
         if square.number:
-            color_font = "#6b6b6b"
             row = square.row
             col = square.col
-            lbl = self.font.render(str(square.number), 1 , color_font)
+            font_color ="#6b6b6b"
+            lbl = self.big_font.render(str(square.number), 1 , font_color)
             lbl_pos = (row* SQUARESIZE + SQUARESIZE / 4, col * SQUARESIZE + SQUARESIZE / 4)
             surface.blit(lbl, lbl_pos)
             if square.wrong:
@@ -56,6 +59,19 @@ class Game:
     def set_hover(self, row, col):
         if Square.in_range(row, col):
             self.hovered_sqr = self.board.squares[row][col]
+
+
+    def show_possible_numbers(self, surface):
+        for row in self.board.squares:
+            for square in row:
+                if not square.number:
+                    for pos_num in square.possible_numbers:
+                        row = square.row
+                        col = square.col
+                        lbl = self.small_font.render(str(pos_num), 1 , "#6b6b6b")
+                        x, y = self.possible_num_placement[pos_num]
+                        lbl_pos = (row* SQUARESIZE + SQUARESIZE * x /3 + SQUARESIZE / 8, col * SQUARESIZE + SQUARESIZE * y /3 + SQUARESIZE / 8)
+                        surface.blit(lbl, lbl_pos)
 
 
 

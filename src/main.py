@@ -19,6 +19,7 @@ class Main:
             self.game.show_bg(surface = self.screen)
             self.game.show_hover(self.screen)
             self.game.show_numbers(self.screen)
+            self.game.show_possible_numbers(self.screen)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -38,9 +39,6 @@ class Main:
                                 col = self.game.board.columns[self.motion_col]
                                 row = self.game.board.rows[self.motion_row]
                                 square.change_number(number)
-                                # block.remove_possible_number()
-                                # col.remove_possible_number()
-                                # row.remove_possible_number()
                     elif key == pygame.K_BACKSPACE:
                         if Square.in_range(self.motion_col, self.motion_row):
                             square = self.game.board.squares[self.motion_row][self.motion_col]
