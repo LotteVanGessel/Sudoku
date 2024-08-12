@@ -31,16 +31,22 @@ class Main:
                     key = event.key
                     if key in self.keys:
                         if Square.in_range(self.motion_col, self.motion_row):
-                            square = self.game.board.squares[self.motion_col][self.motion_row]
+                            square = self.game.board.squares[self.motion_row][self.motion_col]
                             if  not square.static:
                                 number = self.keys[key]
-                                block = self.game.board.blocks[self.motion_col // 3][self.motion_row //3]
+                                block = self.game.board.blocks[self.motion_row // 3][self.motion_col //3]
                                 col = self.game.board.columns[self.motion_col]
-                                row = self.game.board.rows[self.motion_col]
+                                row = self.game.board.rows[self.motion_row]
                                 square.change_number(number)
-                                block.remove_possible_number()
-                                col.remove_possible_number()
-                                row.remove_possible_number()
+                                # block.remove_possible_number()
+                                # col.remove_possible_number()
+                                # row.remove_possible_number()
+                    elif key == pygame.K_BACKSPACE:
+                        if Square.in_range(self.motion_col, self.motion_row):
+                            square = self.game.board.squares[self.motion_row][self.motion_col]
+                            if square.number:
+                                square.remove_number()
+
             pygame.display.update()
 
 main = Main() 

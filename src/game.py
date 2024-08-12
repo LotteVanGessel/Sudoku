@@ -11,7 +11,6 @@ class Game:
         self.hovered_sqr = None
         self.font = pygame.font.SysFont('monospace', 24, bold = True)
 
-
     def show_bg(self, surface)->None:
         color_inside = "#ffffff"
         color_outside = "#000000"
@@ -29,8 +28,6 @@ class Game:
         pygame.draw.line(surface,  "#000000", (6 * SQUARESIZE, 0 ), (6 * SQUARESIZE, WIDTH ), width = 4)
         pygame.draw.line(surface,  "#000000", (9 * SQUARESIZE, 0 ), (9* SQUARESIZE, WIDTH ), width = 4)
         
-
-    
     def show_numbers(self, surface):
         for row in range(ROWS):
             for col in range(COLS):
@@ -53,12 +50,13 @@ class Game:
     def show_hover(self, surface):
         if self.hovered_sqr:
             color = (180, 180, 180)
-            rect = (self.hovered_sqr.col * SQUARESIZE, self.hovered_sqr.row * SQUARESIZE, SQUARESIZE, SQUARESIZE)
+            rect = (self.hovered_sqr.row * SQUARESIZE, self.hovered_sqr.col * SQUARESIZE, SQUARESIZE, SQUARESIZE)
             pygame.draw.rect(surface, color, rect, width=3)
 
     def set_hover(self, row, col):
         if Square.in_range(row, col):
             self.hovered_sqr = self.board.squares[row][col]
+
 
 
     def reset(self):
