@@ -16,6 +16,7 @@ class Main:
 
     def main_loop(self) -> None:
         while True:
+            # self.game.show_row()
             self.game.show_bg(surface = self.screen)
             self.game.show_hover(self.screen)
             self.game.show_numbers(self.screen)
