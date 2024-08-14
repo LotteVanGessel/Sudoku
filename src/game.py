@@ -43,17 +43,17 @@ class Game:
             col = square.col
             font_color ="#6b6b6b"
             lbl = self.big_font.render(str(square.number), 1 , font_color)
-            lbl_pos = (row* SQUARESIZE + SQUARESIZE / 4, col * SQUARESIZE + SQUARESIZE / 4)
+            lbl_pos = (col* SQUARESIZE + SQUARESIZE / 3, row * SQUARESIZE + SQUARESIZE / 4)
             surface.blit(lbl, lbl_pos)
             if square.wrong:
                 color = (244, 67, 54)
-                rect = (row * SQUARESIZE, col * SQUARESIZE, SQUARESIZE, SQUARESIZE)
+                rect = (col * SQUARESIZE, row * SQUARESIZE, SQUARESIZE, SQUARESIZE)
                 pygame.draw.rect(surface, color, rect, width=3)
 
     def show_hover(self, surface):
         if self.hovered_sqr:
             color = (180, 180, 180)
-            rect = (self.hovered_sqr.row * SQUARESIZE, self.hovered_sqr.col * SQUARESIZE, SQUARESIZE, SQUARESIZE)
+            rect = (self.hovered_sqr.col * SQUARESIZE, self.hovered_sqr.row * SQUARESIZE, SQUARESIZE, SQUARESIZE)
             pygame.draw.rect(surface, color, rect, width=3)
 
     def set_hover(self, row, col):
@@ -70,10 +70,7 @@ class Game:
                         col = square.col
                         lbl = self.small_font.render(str(pos_num), 1 , "#6b6b6b")
                         x, y = self.possible_num_placement[pos_num]
-                        lbl_pos = (row* SQUARESIZE + SQUARESIZE * x /3 + SQUARESIZE / 8, col * SQUARESIZE + SQUARESIZE * y /3 + SQUARESIZE / 8)
+                        lbl_pos = (col* SQUARESIZE + SQUARESIZE * x /3 + SQUARESIZE / 8, row * SQUARESIZE + SQUARESIZE * y /3 + SQUARESIZE / 8)
                         surface.blit(lbl, lbl_pos)
-
-
-
     def reset(self):
         self.__init__()

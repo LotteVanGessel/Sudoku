@@ -16,7 +16,6 @@ class Main:
 
     def main_loop(self) -> None:
         while True:
-            # self.game.show_row()
             self.game.show_bg(surface = self.screen)
             self.game.show_hover(self.screen)
             self.game.show_numbers(self.screen)
@@ -36,16 +35,14 @@ class Main:
                             square = self.game.board.squares[self.motion_row][self.motion_col]
                             if  not square.static:
                                 number = self.keys[key]
-                                block = self.game.board.blocks[self.motion_row // 3][self.motion_col //3]
-                                col = self.game.board.columns[self.motion_col]
-                                row = self.game.board.rows[self.motion_row]
                                 square.change_number(number)
+                                self.game.board.update_possible_numbers_square(self.motion_row, self.motion_col)
                     elif key == pygame.K_BACKSPACE:
                         if Square.in_range(self.motion_col, self.motion_row):
                             square = self.game.board.squares[self.motion_row][self.motion_col]
                             if square.number:
                                 square.remove_number()
-
+                                self.game.board.update_possible_numbers_square(self.motion_row, self.motion_col)
             pygame.display.update()
 
 main = Main() 
