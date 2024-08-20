@@ -11,6 +11,7 @@ class Main:
             pygame.display.set_caption("Sudoku")
             self.motion_row = 0
             self.motion_col = 0
+            self.static = False
             self.keys = {pygame.K_1:1, pygame.K_2:2, pygame.K_3:3, pygame.K_4:4, pygame.K_5:5, pygame.K_6:6, pygame.K_7:7, pygame.K_8:8, pygame.K_9:9} 
             self.game = Game()
 
@@ -33,17 +34,18 @@ class Main:
                     if key in self.keys:
                         if Square.in_range(self.motion_col, self.motion_row):
                             square = self.game.board.squares[self.motion_row][self.motion_col]
-                            if  not square.static:
-                                number = self.keys[key]
-                                square.change_number(number)
-                                self.game.board.update_possible_numbers_square(self.motion_row, self.motion_col)
+                            number = self.keys[key]
+                            square.change_number(number, self.static)
+                            self.game.board.update_possible_numbers_square(self.motion_row, self.motion_col)
                     elif key == pygame.K_BACKSPACE:
                         if Square.in_range(self.motion_col, self.motion_row):
                             square = self.game.board.squares[self.motion_row][self.motion_col]
                             if square.number:
                                 square.remove_number()
                                 self.game.board.update_possible_numbers_square(self.motion_row, self.motion_col)
-            pygame.display.update()
+                    elif key == pygame.K_s:
+                        self.static = False if self.static else True
+            pygame.display.update() 
 
 main = Main() 
 main.main_loop()

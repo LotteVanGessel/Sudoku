@@ -9,14 +9,19 @@ class Square:
         self.all_numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9]
         self.wrong = False
 
-    def change_number(self, number):
-        self.number = number
-        if number not in self.possible_numbers:
-            self.wrong = True
+    def change_number(self, number, static):
+        if static:
+            self.static = True
+            self.number = number
+        elif not self.static:
+            self.number = number
+            if number not in self.possible_numbers:
+                self.wrong = True
         
 
     def remove_number(self):
         self.wrong = False
+        self.static = False
         self.number = None
 
     def set_possible_number(self, board):

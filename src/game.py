@@ -15,10 +15,11 @@ class Game:
         
 
     def show_bg(self, surface)->None:
-        color_inside = "#ffffff"
         color_outside = "#000000"
         for row in range(ROWS):
             for col in range(COLS):
+                square = self.board.squares[row][col]
+                color_inside = "#858585" if square.static else "#ffffff"
                 rect = (col * SQUARESIZE, row *SQUARESIZE, SQUARESIZE, SQUARESIZE)
                 pygame.draw.rect(surface, color_inside, rect)
                 pygame.draw.rect(surface, color_outside, rect, width = 1)
@@ -41,7 +42,7 @@ class Game:
         if square.number:
             row = square.row
             col = square.col
-            font_color ="#6b6b6b"
+            font_color = "#000000" if square.static else "#6b6b6b"
             lbl = self.big_font.render(str(square.number), 1 , font_color)
             lbl_pos = (col* SQUARESIZE + SQUARESIZE / 3, row * SQUARESIZE + SQUARESIZE / 4)
             surface.blit(lbl, lbl_pos)
@@ -49,6 +50,7 @@ class Game:
                 color = (244, 67, 54)
                 rect = (col * SQUARESIZE, row * SQUARESIZE, SQUARESIZE, SQUARESIZE)
                 pygame.draw.rect(surface, color, rect, width=3)
+            
 
     def show_hover(self, surface):
         if self.hovered_sqr:
