@@ -6,6 +6,7 @@ class Square:
         self.number = None
         self.static = False
         self.possible_numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        self.visible_possible_numbers = {1:True, 2:True, 3:True, 4:True, 5:True, 6:True, 7:True, 8:True, 9:True}
         self.all_numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9]
         self.wrong = False
 
