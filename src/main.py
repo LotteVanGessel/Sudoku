@@ -3,6 +3,7 @@ import sys
 from const import WIDTH, HEIGHT, SQUARESIZE
 from game import Game   
 from square import Square 
+from solver import SudokuSolver
 
 class Main:
     def __init__(self) -> None:
@@ -15,6 +16,7 @@ class Main:
             self.static = False
             self.keys = {pygame.K_1:1, pygame.K_2:2, pygame.K_3:3, pygame.K_4:4, pygame.K_5:5, pygame.K_6:6, pygame.K_7:7, pygame.K_8:8, pygame.K_9:9} 
             self.game = Game()
+            self.sol = SudokuSolver(self.game.board)
 
     def main_loop(self) -> None:
         while True:
@@ -52,6 +54,8 @@ class Main:
                                 self.game.board.update_possible_numbers_square(self.motion_row, self.motion_col)
                     elif key == pygame.K_s:
                         self.static = False if self.static else True
+                    elif key == pygame.K_h:
+                        self.sol.solve()
             pygame.display.update() 
 
 main = Main() 
