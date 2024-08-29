@@ -4,6 +4,7 @@ from const import WIDTH, HEIGHT, SQUARESIZE
 from game import Game   
 from square import Square 
 from solver import SudokuSolver
+import threading
 
 class Main:
     def __init__(self) -> None:
@@ -55,7 +56,9 @@ class Main:
                     elif key == pygame.K_s:
                         self.static = False if self.static else True
                     elif key == pygame.K_h:
-                        self.sol.solve()
+                        thread = threading.Thread(target=self.sol.solve)
+                        thread.start()
+                        # self.sol.solve()
             pygame.display.update() 
 
 main = Main() 
