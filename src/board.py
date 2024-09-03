@@ -34,3 +34,10 @@ class Board:
             s.set_possible_number(self)
         for s in block.contained_squares:
             s.set_possible_number(self)
+    
+    def solve_whole_board(self, sol):
+        for row in range(ROWS):
+            for col in range(COLS):
+                square = self.squares[row][col]
+                number = sol.solution[row][col]
+                square.change_number(number, False)

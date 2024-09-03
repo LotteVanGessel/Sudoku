@@ -12,8 +12,12 @@ class SudokuSolver:
         if self.model:
             for var in self.model:
                 _, row, col = str(var).split("_")
-                self.solution[int(row)][int(col)] = self.model[var]
+                self.solution[int(row)][int(col)] = int(self.model[var].as_string())
+        print("done")
 
+    def get_solution_number(self, row, col):
+        return self.solution[row][col]  
+    
     def solve(self):
         if not self.model:
             s = z3.Solver()
