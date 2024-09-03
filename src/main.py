@@ -25,20 +25,28 @@ class Main:
             self.game.show_hover(self.screen)
             self.game.show_numbers(self.screen)
             self.game.show_possible_numbers(self.screen)
+            self.game.show_buttons(self.screen)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
                 elif event.type == pygame.MOUSEMOTION:
-                    self.motion_row = (event.pos[1]) // SQUARESIZE
-                    self.motion_col = (event.pos[0] - self.game.offset) // SQUARESIZE
-                    self.pos_num_r = (event.pos[1]  - self.motion_row * SQUARESIZE) / SQUARESIZE * 3 // 1
-                    self.pos_num_c = (event.pos[0] - self.game.offset - self.motion_col * SQUARESIZE) / SQUARESIZE * 3 // 1
-                    self.game.set_hover(self.motion_row, self.motion_col)
-                    self.game.set_number_hover(self.pos_num_r, self.pos_num_c)
+                    if event.pos[0] >= self.game.offset:
+                        self.motion_row = (event.pos[1]) // SQUARESIZE
+                        self.motion_col = (event.pos[0] - self.game.offset) // SQUARESIZE
+                        self.pos_num_r = (event.pos[1]  - self.motion_row * SQUARESIZE) / SQUARESIZE * 3 // 1
+                        self.pos_num_c = (event.pos[0] - self.game.offset - self.motion_col * SQUARESIZE) / SQUARESIZE * 3 // 1
+                        self.game.set_hover(self.motion_row, self.motion_col)
+                        self.game.set_number_hover(self.pos_num_r, self.pos_num_c)
+                    else:
+                        for button in self.game.buttons:
+                            if button.corners[0][0] <= event.pos[0] <= button.corners[0][1] and button.corners[1][0] <= event.pos[1] <= button.corners[1][1]:
+                                button.press()
+
                 elif event.type == pygame.MOUSEBUTTONDOWN:
-                    if self.game.pos_num_high_lighted and self.game.hovered_sqr:
-                        self.game.hovered_sqr.visible_possible_numbers[self.game.pos_num_high_lighted] = not self.game.hovered_sqr.visible_possible_numbers[self.game.pos_num_high_lighted]
+                    if event.pos[0] >= self.game.offset:
+                        if self.game.pos_num_high_lighted and self.game.hovered_sqr:
+                            self.game.hovered_sqr.visible_possible_numbers[self.game.pos_num_high_lighted] = not self.game.hovered_sqr.visible_possible_numbers[self.game.pos_num_high_lighted]
                 elif event.type == pygame.KEYDOWN:
                     key = event.key
                     if key in self.keys:
