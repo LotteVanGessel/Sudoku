@@ -1,9 +1,10 @@
 import pygame
+import time 
 
 from const import ROWS, COLS, SQUARESIZE, S_HEIGHT, S_WIDTH, T_WIDTH
 from board import Board
 from square import Square
-from button import Reset, Save, Solve
+from button import Reset, Save, Solve, Show_board, Show_cell, Load, Show_clues
 import threading
 
 class Game:
@@ -17,7 +18,9 @@ class Game:
         self.possible_numbers_position = {(0.0,0.0):1, (0.0,1.0):2, (0.0,2.0):3, (1.0,0.0):4, (1.0,1.0):5,(1.0,2.0):6,(2.0,0.0):7,(2.0,1.0):8, (2.0,2.0):9}
         self.pos_num_high_lighted = None
         self.offset = T_WIDTH - S_WIDTH
-        self.buttons = [Solve(1, self.solve), Reset(2, self.reset), Save(3, self.save)] 
+        self.clues_visible = True
+        self.buttons = [Solve(1, self.solve), Show_board(2, self.solve_board), Show_cell(3, self.solve_cell), Show_clues(4, self.show_clues), Reset(5, self.reset), Save(7, self.save), Load(8, self.load) ] 
+
     
     def show_bg(self, surface):
         self.show_bg_sudoku(surface)
@@ -61,10 +64,10 @@ class Game:
             lbl = self.big_font.render(str(square.number), 1 , font_color)
             lbl_pos = (self.offset + col * SQUARESIZE + SQUARESIZE / 3, row * SQUARESIZE + SQUARESIZE / 4)
             surface.blit(lbl, lbl_pos)
-            if square.wrong:
-                color = (244, 67, 54)
-                rect = (self.offset + col * SQUARESIZE, row * SQUARESIZE, SQUARESIZE, SQUARESIZE)
-                pygame.draw.rect(surface, color, rect, width=3)
+            # if square.wrong:
+            #     color = (244, 67, 54)
+            #     rect = (self.offset + col * SQUARESIZE, row * SQUARESIZE, SQUARESIZE, SQUARESIZE)
+            #     pygame.draw.rect(surface, color, rect, width=3)
             
 
     def show_hover(self, surface):
@@ -82,18 +85,19 @@ class Game:
             self.pos_num_high_lighted = self.possible_numbers_position[(row, col)]
 
     def show_possible_numbers(self, surface):
-        for row in self.board.squares:
-            for square in row:
-                if not square.number:
-                    for pos_num in square.possible_numbers:
-                        if square.visible_possible_numbers[pos_num]:
-                            color = "#735AB0" if (self.hovered_sqr and square == self.hovered_sqr and pos_num == self.pos_num_high_lighted) else "#1c0454"
-                            row = square.row
-                            col = square.col
-                            lbl = self.small_font.render(str(pos_num), 1 , color)
-                            x, y = self.possible_num_placement[pos_num]
-                            lbl_pos = (self.offset + col* SQUARESIZE + SQUARESIZE * x /3 + SQUARESIZE / 8, row * SQUARESIZE + SQUARESIZE * y /3 + SQUARESIZE / 8)
-                            surface.blit(lbl, lbl_pos)
+        if self.clues_visible:
+            for row in self.board.squares:
+                for square in row:
+                    if not square.number:
+                        for pos_num in square.possible_numbers:
+                            if square.visible_possible_numbers[pos_num]:
+                                color = "#735AB0" if (self.hovered_sqr and square == self.hovered_sqr and pos_num == self.pos_num_high_lighted) else "#1c0454"
+                                row = square.row
+                                col = square.col
+                                lbl = self.small_font.render(str(pos_num), 1 , color)
+                                x, y = self.possible_num_placement[pos_num]
+                                lbl_pos = (self.offset + col* SQUARESIZE + SQUARESIZE * x /3 + SQUARESIZE / 8, row * SQUARESIZE + SQUARESIZE * y /3 + SQUARESIZE / 8)
+                                surface.blit(lbl, lbl_pos)
 
     def show_buttons(self, surface):
         for button in self.buttons:
@@ -101,17 +105,38 @@ class Game:
 
     def show_button(self, surface, button):
         for (i, texture) in enumerate(button.textures):
-            img = pygame.image.load(texture)
-            img_center = tuple(map(sum, zip(button.position_first_letter, (button.width * i, 0 ))))
-            texture_rect = img.get_rect(center = img_center)
-            surface.blit(img, texture_rect)
-        
+            if texture != "":
+                img = pygame.image.load(texture)
+                img_center = tuple(map(sum, zip(button.position_first_letter, (button.width * i, 0 ))))
+                texture_rect = img.get_rect(center = img_center)
+                surface.blit(img, texture_rect)
+
+    def show_animation(self, surface, button):
+        for (i, texture) in enumerate(button.pressed_textures):
+           not_pressed = button.textures[i]
+           button.textures[i] = texture 
+           pygame.mixer.Sound.play(button.sound)
+           time.sleep(0.1)
+           button.textures[i] = not_pressed
+
     def save(self):
         pass
     
+    def load(self):
+        pass
+
     def solve(self):
         thread = threading.Thread(target=self.board.solve)
         thread.start()
     
+    def solve_board(self):
+        self.board.solve_whole_board()
+    
+    def solve_cell(self):
+        pass
+
+    def show_clues(self):
+        self.clues_visible = not self.clues_visible
+
     def reset(self):
         self.__init__()

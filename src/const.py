@@ -3,7 +3,7 @@
 S_WIDTH = 630 
 S_HEIGHT = 630 
 
-T_WIDTH = S_WIDTH + 300
+T_WIDTH = S_WIDTH + 400
 
 # Board dimensions
 
