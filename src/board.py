@@ -1,6 +1,7 @@
 from const import COLS, ROWS
 from square import Square
 from container import Row, Column, Block
+from solver import SudokuSolver
 import os
 import copy
 
@@ -11,6 +12,7 @@ class Board:
         self.columns = [Column() for _ in range(COLS)]
         self.rows = [Row() for _ in range(ROWS)]
         self.blocks = [[Block() for _ in range(3)] for _ in range(3)]
+        self.sol = SudokuSolver()
         self._create()
         
 
@@ -41,3 +43,6 @@ class Board:
                 square = self.squares[row][col]
                 number = sol.solution[row][col]
                 square.change_number(number, False)
+    
+    def solve(self):
+        self.sol.solve(self.squares)

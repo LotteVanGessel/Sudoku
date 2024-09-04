@@ -2,8 +2,7 @@ import z3
 from const import ROWS, COLS
 
 class SudokuSolver:
-    def __init__(self, board) -> None:
-        self.board = board
+    def __init__(self) -> None:
         self.variables = [[ 0 for i in range(COLS)] for j in range(ROWS)]
         self.solution = [[ 0 for i in range(COLS)] for j in range(ROWS)]
         self.model = None 
@@ -18,12 +17,12 @@ class SudokuSolver:
     def get_solution_number(self, row, col):
         return self.solution[row][col]  
     
-    def solve(self):
+    def solve(self, squares):
         if not self.model:
             s = z3.Solver()
             for row in range(ROWS):
                 for col in range(COLS):
-                    square = self.board.squares[row][col]
+                    square = squares[row][col]
                     self.variables[row][col] = z3.Int(f"s_{row}_{col}")
                     x = self.variables[row][col]
                     if square.static:

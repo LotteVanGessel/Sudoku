@@ -4,6 +4,7 @@ from const import ROWS, COLS, SQUARESIZE, S_HEIGHT, S_WIDTH, T_WIDTH
 from board import Board
 from square import Square
 from button import Reset, Save, Solve
+import threading
 
 class Game:
 
@@ -16,7 +17,7 @@ class Game:
         self.possible_numbers_position = {(0.0,0.0):1, (0.0,1.0):2, (0.0,2.0):3, (1.0,0.0):4, (1.0,1.0):5,(1.0,2.0):6,(2.0,0.0):7,(2.0,1.0):8, (2.0,2.0):9}
         self.pos_num_high_lighted = None
         self.offset = T_WIDTH - S_WIDTH
-        self.buttons = [Solve(1), Reset(2), Save(3)] 
+        self.buttons = [Solve(1, self.solve), Reset(2, self.reset), Save(3, self.save)] 
     
     def show_bg(self, surface):
         self.show_bg_sudoku(surface)
@@ -27,7 +28,7 @@ class Game:
         for row in range(ROWS):
             for col in range(COLS):
                 square = self.board.squares[row][col]
-                color_inside = "#858585" if square.static else "#c2d2d9"
+                color_inside = "#6e79a6" if square.static else "#c2d2d9"
                 rect = (self.offset + col * SQUARESIZE, row *SQUARESIZE, SQUARESIZE, SQUARESIZE)
                 pygame.draw.rect(surface, color_inside, rect)
                 pygame.draw.rect(surface, color_outside, rect, width = 1)
@@ -56,7 +57,7 @@ class Game:
         if square.number:
             row = square.row
             col = square.col
-            font_color = "#1c0454" if square.static else "#6b6b6b"
+            font_color = "#1c0454" if square.static else "#6e79a6"
             lbl = self.big_font.render(str(square.number), 1 , font_color)
             lbl_pos = (self.offset + col * SQUARESIZE + SQUARESIZE / 3, row * SQUARESIZE + SQUARESIZE / 4)
             surface.blit(lbl, lbl_pos)
@@ -105,5 +106,12 @@ class Game:
             texture_rect = img.get_rect(center = img_center)
             surface.blit(img, texture_rect)
         
+    def save(self):
+        pass
+    
+    def solve(self):
+        thread = threading.Thread(target=self.board.solve)
+        thread.start()
+    
     def reset(self):
         self.__init__()
