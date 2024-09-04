@@ -1,9 +1,11 @@
 import pygame 
 import sys
+import threading
+
+
 from const import  S_HEIGHT, SQUARESIZE, T_WIDTH
 from game import Game   
 from square import Square 
-from solver import SudokuSolver
 
 
 class Main:
@@ -48,6 +50,8 @@ class Main:
                         for button in game.buttons:
                             if button.corners[0][0] <= event.pos[0] <= button.corners[0][1] and button.corners[1][0] <= event.pos[1] <= button.corners[1][1]:
                                 button.press()
+                                thread = threading.Thread(target=self.game.show_animation, args = (self.screen, button))
+                                thread.start()
                 elif event.type == pygame.KEYDOWN:
                     key = event.key
                     if key in self.keys:
