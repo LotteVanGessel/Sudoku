@@ -1,4 +1,5 @@
 import pygame
+import time
 from const import S_HEIGHT, S_WIDTH, T_WIDTH
 
 class Button:
@@ -13,6 +14,7 @@ class Button:
         self.func = func
         self.sound_path = "./assets/sounds/key_board_click.wav"
         self.sound = pygame.mixer.Sound(self.sound_path)
+        self.animating = False
 
 
     def press(self)-> None:
@@ -26,7 +28,12 @@ class Reset(Button):
         self.pressed_textures = ["./assets/images/keyboard_117.png", "./assets/images/keyboard_116.png", "./assets/images/keyboard_125.png", "./assets/images/keyboard_116.png", "./assets/images/keyboard_118.png"]
         self.position_first_letter = ((T_WIDTH - S_WIDTH) / 2 - len(self.textures) * self.width / 2, S_HEIGHT / 4 + (self.position * self.height * 1.5))
         self.corners = [(self.position_first_letter[0] - self.width / 2, self.position_first_letter[0] - self.width / 2 + self.width * len(self.textures)), (self.position_first_letter[1] - self.height / 2, self.position_first_letter[1] + self.height / 2)]
-    
+        
+
+    def press(self) -> None:
+        while self.animating:
+            time.sleep(0.01)
+        self.func()
     
 class Save(Button):
     def __init__(self, pos, func) -> None:
