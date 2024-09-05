@@ -4,6 +4,7 @@ import threading
 
 
 from const import  S_HEIGHT, SQUARESIZE, T_WIDTH
+from button import Reset, Button
 from game import Game   
 from square import Square 
 
@@ -22,9 +23,9 @@ class Main:
    
 
     def main_loop(self) -> None:
-        board = self.game.board
-        game = self.game
         while True:
+            board = self.game.board
+            game = self.game
             game.show_bg(surface = self.screen)
             game.show_hover(self.screen)
             game.show_numbers(self.screen)
@@ -49,9 +50,15 @@ class Main:
                     else:
                         for button in game.buttons:
                             if button.corners[0][0] <= event.pos[0] <= button.corners[0][1] and button.corners[1][0] <= event.pos[1] <= button.corners[1][1]:
-                                button.press()
-                                thread = threading.Thread(target=self.game.show_animation, args = (self.screen, button))
-                                thread.start()
+                                if isinstance(button, Reset):
+                                    thread = threading.Thread(target=self.game.show_animation, args = (button,))
+                                    thread.start()
+                                    thread2 = threading.Thread(target=button.press)
+                                    thread2.start()
+                                else:
+                                    button.press()
+                                    thread = threading.Thread(target=self.game.show_animation, args = (button,))
+                                    thread.start()
                 elif event.type == pygame.KEYDOWN:
                     key = event.key
                     if key in self.keys:
