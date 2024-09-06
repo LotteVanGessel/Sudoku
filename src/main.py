@@ -47,7 +47,7 @@ class Main:
                         game.set_number_hover(self.pos_num_r, self.pos_num_c)
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     if event.pos[0] >= game.offset:
-                        if game.pos_num_high_lighted and game.hovered_sqr:
+                        if game.pos_num_high_lighted and game.hovered_sqr and game.clues_visible:
                             game.hovered_sqr.visible_possible_numbers[game.pos_num_high_lighted] = not game.hovered_sqr.visible_possible_numbers[game.pos_num_high_lighted]
                     else:
                         for button in game.buttons:
