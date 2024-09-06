@@ -4,7 +4,7 @@ import time
 from const import ROWS, COLS, SQUARESIZE, S_HEIGHT, S_WIDTH, T_WIDTH
 from board import Board
 from square import Square
-from button import Reset, Save, Solve, Show_board, Show_cell, Load, Show_clues
+from button import Reset, Save, Solve, Show_board, Show_cell, Load, Show_clues, Static
 import threading
 
 class Game:
@@ -12,6 +12,7 @@ class Game:
     def __init__(self) -> None:
         self.board = Board()
         self.hovered_sqr = None
+        self.chosen_sqr = None 
         self.big_font = pygame.font.SysFont('monospace', 24, bold = True)
         self.small_font = pygame.font.SysFont('monospace', 12, bold = True)
         self.possible_num_placement = {1:(0, 0), 2:(1,0), 3:(2,0), 4:(0,1), 5:(1,1), 6:(2,1), 7:(0,2), 8:(1,2),9:(2,2)}
@@ -19,7 +20,7 @@ class Game:
         self.pos_num_high_lighted = None
         self.offset = T_WIDTH - S_WIDTH
         self.clues_visible = True
-        self.buttons = [Solve(1, self.solve), Show_board(2, self.solve_board), Show_cell(3, self.solve_cell), Show_clues(4, self.show_clues), Reset(5, self.reset), Save(7, self.save), Load(8, self.load) ] 
+        self.buttons = [Static(0, self.static), Solve(1, self.solve), Show_board(2, self.solve_board), Show_cell(3, self.solve_cell), Show_clues(4, self.show_clues), Reset(5, self.reset), Save(7, self.save), Load(8, self.load) ] 
 
     
     def show_bg(self, surface):
@@ -68,18 +69,25 @@ class Game:
             #     color = (244, 67, 54)
             #     rect = (self.offset + col * SQUARESIZE, row * SQUARESIZE, SQUARESIZE, SQUARESIZE)
             #     pygame.draw.rect(surface, color, rect, width=3)
-            
 
     def show_hover(self, surface):
         if self.hovered_sqr:
             color = "#1c0454"
             rect = (self.offset + self.hovered_sqr.col * SQUARESIZE, self.hovered_sqr.row * SQUARESIZE, SQUARESIZE, SQUARESIZE)
             pygame.draw.rect(surface, color, rect, width=3)
+        if self.chosen_sqr:
+            color = "#ffffff"
+            rect = (self.offset + self.chosen_sqr.col * SQUARESIZE, self.chosen_sqr.row * SQUARESIZE, SQUARESIZE, SQUARESIZE)
+            pygame.draw.rect(surface, color, rect, width=3)
 
     def set_hover(self, row, col):
         if Square.in_range(row, col):
             self.hovered_sqr = self.board.squares[row][col]
     
+    def set_chosen(self, row, col):
+        if Square.in_range(row, col):
+            self.chosen_sqr = self.board.squares[row][col]
+
     def set_number_hover(self, row, col):
         if (row, col) in self.possible_numbers_position.keys():
             self.pos_num_high_lighted = self.possible_numbers_position[(row, col)]
@@ -111,13 +119,15 @@ class Game:
                 texture_rect = img.get_rect(center = img_center)
                 surface.blit(img, texture_rect)
 
-    def show_animation(self, surface, button):
+    def show_animation(self, button):
+        button.animating = True
         for (i, texture) in enumerate(button.pressed_textures):
            not_pressed = button.textures[i]
            button.textures[i] = texture 
            pygame.mixer.Sound.play(button.sound)
            time.sleep(0.1)
            button.textures[i] = not_pressed
+        button.animating = False
 
     def save(self):
         pass
@@ -140,3 +150,6 @@ class Game:
 
     def reset(self):
         self.__init__()
+
+    def static(self):
+        self.board.static = False if self.board.static else True
