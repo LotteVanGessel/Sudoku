@@ -5,7 +5,7 @@ from const import ROWS, COLS, SQUARESIZE, S_HEIGHT, S_WIDTH, T_WIDTH
 from board import Board
 from square import Square
 from button import Reset, Save, Solve, Show_board, Show_cell, Load, Show_clues, Static
-import threading
+# import threading
 
 class Game:
 
@@ -119,14 +119,29 @@ class Game:
                 texture_rect = img.get_rect(center = img_center)
                 surface.blit(img, texture_rect)
 
-    def show_animation(self, button):
+    def show_animation(self, button, cont = False):
         button.animating = True
-        for (i, texture) in enumerate(button.pressed_textures):
-           not_pressed = button.textures[i]
-           button.textures[i] = texture 
-           pygame.mixer.Sound.play(button.sound)
-           time.sleep(0.1)
-           button.textures[i] = not_pressed
+        if cont:
+            while button.animating:
+                for (i, texture) in enumerate(button.pressed_textures):
+                    not_pressed = button.textures[i]
+                    button.textures[i] = texture 
+                    pygame.mixer.Sound.play(button.sound)
+                    time.sleep(0.1)
+                    button.textures[i] = not_pressed
+        else:
+            for (i, texture) in enumerate(button.pressed_textures):
+                not_pressed = button.textures[i]
+                button.textures[i] = texture 
+                pygame.mixer.Sound.play(button.sound)
+                time.sleep(0.1)
+                button.textures[i] = not_pressed
+            button.animating = False
+
+    def stop_animating(self, button, condition):
+        while condition():
+            time.sleep(0.1)
+        print("changed")
         button.animating = False
 
     def save(self):
@@ -136,14 +151,14 @@ class Game:
         pass
 
     def solve(self):
-        thread = threading.Thread(target=self.board.solve)
-        thread.start()
+        self.board.solve()
     
     def solve_board(self):
         self.board.solve_whole_board()
     
     def solve_cell(self):
-        pass
+        number = self.board.sol.solution[self.chosen_sqr.row][self.chosen_sqr.col]
+        self.chosen_sqr.change_number(number, self.board.static)
 
     def show_clues(self):
         self.clues_visible = not self.clues_visible

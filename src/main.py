@@ -58,8 +58,12 @@ class Main:
                                     thread2 = threading.Thread(target=button.press)
                                     thread2.start()
                                 elif isinstance(button, Solve):
-                                    thread = threading.Thread(target=self.game.show_animation, args = (button,))
+                                    thread = threading.Thread(target=self.game.show_animation, args = (button, True))
                                     thread.start()
+                                    thread2 = threading.Thread(target=button.press)
+                                    thread2.start()
+                                    thread3 = threading.Thread(target=self.game.stop_animating, args = (button, thread2.is_alive))
+                                    thread3.start()
                                 else:
                                     button.press()
                                     thread = threading.Thread(target=self.game.show_animation, args = (button,))
