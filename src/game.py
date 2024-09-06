@@ -121,22 +121,21 @@ class Game:
 
     def show_animation(self, button, cont = False):
         button.animating = True
-        if cont:
-            while button.animating:
-                for (i, texture) in enumerate(button.pressed_textures):
-                    not_pressed = button.textures[i]
-                    button.textures[i] = texture 
-                    pygame.mixer.Sound.play(button.sound)
-                    time.sleep(0.1)
-                    button.textures[i] = not_pressed
-        else:
-            for (i, texture) in enumerate(button.pressed_textures):
+        for (i, texture) in enumerate(button.pressed_textures):
                 not_pressed = button.textures[i]
                 button.textures[i] = texture 
                 pygame.mixer.Sound.play(button.sound)
                 time.sleep(0.1)
                 button.textures[i] = not_pressed
-            button.animating = False
+        if cont:
+            while button.animating:
+                for (i, texture) in enumerate(button.pressed_textures):
+                    not_pressed = button.textures[i]
+                    button.textures[i] = texture 
+                    time.sleep(0.1)
+                    button.textures[i] = not_pressed
+
+        button.animating = False
 
     def stop_animating(self, button, condition):
         while condition():
