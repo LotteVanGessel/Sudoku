@@ -1,6 +1,7 @@
 import pygame 
 import sys
 import threading
+import time
 
 
 from const import  S_HEIGHT, SQUARESIZE, T_WIDTH
@@ -16,6 +17,8 @@ class Main:
             pygame.display.set_caption("Sudoku")
             self.mouse_row = 0
             self.mouse_col = 0
+            self.prev_mouse_row = -1
+            self.prev_mouse_col = -1
             self.chosen_row = 0
             self.chosen_col = 0
             self.pos_num = 1
@@ -43,11 +46,16 @@ class Main:
                         self.mouse_col = (event.pos[0] - game.offset) // SQUARESIZE
                         self.pos_num_r = (event.pos[1]  - self.mouse_row * SQUARESIZE) / SQUARESIZE * 3 // 1
                         self.pos_num_c = (event.pos[0] - game.offset - self.mouse_col * SQUARESIZE) / SQUARESIZE * 3 // 1
+                        if self.mouse_row != self.pos_num_r or self.pos_num_c != self.prev_mouse_col:
+                            self.prev_mouse_row = self.pos_num_r
+                            self.prev_mouse_col = self.pos_num_c
+                            self.timer = time.time()
                         game.set_hover(self.mouse_row, self.mouse_col)
                         game.set_number_hover(self.pos_num_r, self.pos_num_c)
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     if event.pos[0] >= game.offset:
-                        if game.pos_num_high_lighted and game.hovered_sqr and game.clues_visible:
+                        game.set_chosen(self.mouse_row, self.mouse_col)
+                        if game.pos_num_high_lighted and game.hovered_sqr and game.clues_visible and time.time() - self.timer > 0.5:
                             game.hovered_sqr.visible_possible_numbers[game.pos_num_high_lighted] = not game.hovered_sqr.visible_possible_numbers[game.pos_num_high_lighted]
                     else:
                         for button in game.buttons:
@@ -71,17 +79,21 @@ class Main:
                 elif event.type == pygame.KEYDOWN:
                     key = event.key
                     if key in self.keys:
-                        if Square.in_range(self.chosen_col, self.chosen_row):
-                            square = board.squares[self.chosen_row][self.chosen_col]
+                        row = game.chosen_sqr.row
+                        col = game.chosen_sqr.col
+                        if Square.in_range(row,col):
+                            square = board.squares[row][col]
                             number = self.keys[key]
                             square.change_number(number, board.static)
-                            board.update_possible_numbers_square(self.chosen_row, self.chosen_col)
+                            board.update_possible_numbers_square(row, col)
                     elif key == pygame.K_BACKSPACE:
-                        if Square.in_range(self.mouse_col, self.mouse_row):
-                            square = board.squares[self.chosen_row][self.chosen_col]
+                        row = game.chosen_sqr.row
+                        col = game.chosen_sqr.col
+                        if Square.in_range(row, col):
+                            square = board.squares[row][col]
                             if square.number:
                                 square.remove_number()
-                                board.update_possible_numbers_square(self.chosen_row, self.chosen_col)
+                                board.update_possible_numbers_square(row, col)
                     elif key == pygame.K_e:
                         board.solve_whole_board(self.sol)
                     elif key == pygame.K_u:
