@@ -12,7 +12,6 @@ class SudokuSolver:
             for var in self.model:
                 _, row, col = str(var).split("_")
                 self.solution[int(row)][int(col)] = int(self.model[var].as_string())
-        print("done")
 
     def get_solution_number(self, row, col):
         return self.solution[row][col]  

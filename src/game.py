@@ -20,7 +20,7 @@ class Game:
         self.pos_num_high_lighted = None
         self.offset = T_WIDTH - S_WIDTH
         self.clues_visible = True
-        self.buttons = [Static(0, self.static), Solve(1, self.solve), Show_board(2, self.solve_board), Show_cell(3, self.solve_cell), Show_clues(4, self.show_clues), Reset(5, self.reset), Save(7, self.save), Load(8, self.load) ] 
+        self.buttons = [Static(-2, self.static), Show_clues(-1, self.show_clues), Reset(0, self.reset), Solve(2, self.solve), Show_board(3, self.solve_board), Show_cell(4, self.solve_cell), Save(6, self.save), Load(7, self.load) ] 
 
     
     def show_bg(self, surface):
@@ -65,10 +65,10 @@ class Game:
             lbl = self.big_font.render(str(square.number), 1 , font_color)
             lbl_pos = (self.offset + col * SQUARESIZE + SQUARESIZE / 3, row * SQUARESIZE + SQUARESIZE / 4)
             surface.blit(lbl, lbl_pos)
-            # if square.wrong:
-            #     color = (244, 67, 54)
-            #     rect = (self.offset + col * SQUARESIZE, row * SQUARESIZE, SQUARESIZE, SQUARESIZE)
-            #     pygame.draw.rect(surface, color, rect, width=3)
+            if square.wrong:
+                color = (244, 67, 54)
+                rect = (self.offset + col * SQUARESIZE, row * SQUARESIZE, SQUARESIZE, SQUARESIZE)
+                pygame.draw.rect(surface, color, rect, width=3)
 
     def show_hover(self, surface):
         if self.hovered_sqr:
@@ -140,7 +140,6 @@ class Game:
     def stop_animating(self, button, condition):
         while condition():
             time.sleep(0.1)
-        print("changed")
         button.animating = False
 
     def save(self):
