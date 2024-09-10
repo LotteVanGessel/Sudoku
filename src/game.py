@@ -152,11 +152,15 @@ class Game:
         self.board.solve()
     
     def solve_board(self):
-        self.board.solve_whole_board()
-    
+        self.board.static = False
+        for row in range(ROWS):
+            for col in range(COLS):
+                number = self.board.sol.solution[row][col]
+                self.board.change_number(row, col, number)
     def solve_cell(self):
+        self.board.static = False
         number = self.board.sol.solution[self.chosen_sqr.row][self.chosen_sqr.col]
-        self.chosen_sqr.change_number(number, self.board.static)
+        self.board.change_number(self.chosen_sqr.row, self.chosen_sqr.col, number)
 
     def show_clues(self):
         self.clues_visible = not self.clues_visible
