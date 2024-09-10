@@ -16,10 +16,7 @@ class Square:
             self.number = number
         elif not self.static:
             self.number = number
-            if number not in self.possible_numbers:
-                self.wrong = True
         
-
     def remove_number(self):
         self.wrong = False
         self.static = False

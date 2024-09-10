@@ -38,6 +38,40 @@ class Board:
         for s in block.contained_squares:
             s.set_possible_number(self)
     
+    def set_wrong(self, row, col):
+        rows = self.rows[row]
+        cols = self.columns[col]
+        block = self.blocks[row // 3][col // 3]
+        current_square = self.squares[row][col]
+        number = current_square.number
+        wrong = False
+        for s in rows.contained_squares:
+            if number == s.number and current_square != s:
+                s.wrong = True
+                wrong = True
+        for s in cols.contained_squares:
+            if number == s.number and current_square != s:
+                s.wrong = True
+                wrong = True
+        for s in block.contained_squares:
+            if number == s.number and current_square != s:
+                s.wrong = True
+                wrong = True
+        current_square.wrong = wrong
+
+    def change_number(self, row, col, number):
+        square = self.squares[row][col]
+        square.change_number(number, self.static)
+        self.update_possible_numbers_square(row, col)
+        self.set_wrong(row, col)
+
+    def remove_number(self, row, col):
+        square = self.squares[row][col]
+        if square.number:
+            square.remove_number()
+            self.update_possible_numbers_square(row, col)
+            self.set_wrong(row,col)
+
     def solve_whole_board(self):
         for row in range(ROWS):
             for col in range(COLS):
