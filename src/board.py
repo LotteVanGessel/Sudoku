@@ -59,18 +59,36 @@ class Board:
                 wrong = True
         current_square.wrong = wrong
 
+    def remove_wrong(self, row, col, number):
+        rows = self.rows[row]
+        cols = self.columns[col]
+        block = self.blocks[row // 3][col // 3]
+        for s in rows.contained_squares:
+            if number == s.number:
+                self.set_wrong(s.row, s.col)
+        for s in cols.contained_squares:
+            if number == s.number:
+                self.set_wrong(s.row, s.col)
+        for s in block.contained_squares:
+            if number == s.number:
+                self.set_wrong(s.row, s.col)
+
     def change_number(self, row, col, number):
         square = self.squares[row][col]
+        prev_number = square.number
         square.change_number(number, self.static)
+        if prev_number:
+            self.remove_wrong(row, col, prev_number)
         self.update_possible_numbers_square(row, col)
         self.set_wrong(row, col)
 
     def remove_number(self, row, col):
         square = self.squares[row][col]
+        prev_number = square.number
         if square.number:
             square.remove_number()
             self.update_possible_numbers_square(row, col)
-            self.set_wrong(row,col)
+            self.remove_wrong(row,col, prev_number)
 
     def solve_whole_board(self):
         for row in range(ROWS):
