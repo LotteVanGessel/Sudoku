@@ -16,7 +16,6 @@ class Board:
         self.static = False
         self._create()
         
-
     def _create(self):
         for row in range(ROWS):
             self.squares.append([])

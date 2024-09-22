@@ -1,5 +1,9 @@
+import tkinter.filedialog
 import pygame
 import time 
+import pickle 
+from itertools import chain
+import tkinter
 
 from const import ROWS, COLS, SQUARESIZE, S_HEIGHT, S_WIDTH, T_WIDTH
 from board import Board
@@ -143,10 +147,24 @@ class Game:
         button.animating = False
 
     def save(self):
-        pass
+        squares = list(chain.from_iterable(self.board.squares))
+        numbers = [s.number for s in squares]
+        statics = [s.static for s in squares]
+        save_file = list(zip(numbers, statics))
+        dirname = tkinter.filedialog.asksaveasfilename(initialdir="./save_files",title='Please select a directory')
+        with open(dirname, 'wb') as fp:
+            pickle.dump(save_file, fp)
     
     def load(self):
-        pass
+        dirname = tkinter.filedialog.askopenfilename(initialdir="./save_files",title='Please select a directory')
+        with open(dirname, 'rb') as fp:
+            n_list = pickle.load(fp)
+        self.reset()
+        for i, (number, static) in enumerate(n_list):
+            row = i // ROWS
+            col = i % ROWS
+            self.board.static = static
+            self.board.change_number(row, col, number)
 
     def solve(self):
         self.board.solve()
@@ -157,6 +175,7 @@ class Game:
             for col in range(COLS):
                 number = self.board.sol.solution[row][col]
                 self.board.change_number(row, col, number)
+
     def solve_cell(self):
         self.board.static = False
         number = self.board.sol.solution[self.chosen_sqr.row][self.chosen_sqr.col]
